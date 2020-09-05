@@ -12,7 +12,7 @@ class StatsScoreboard(
         private const val TAG = "count"
     }
 
-    private val scoreboard = server.scoreboardManager?.newScoreboard!!
+    private val scoreboard = server.scoreboardManager?.mainScoreboard!!
     private val objective = scoreboard.registerNewObjective(TAG, TAG, "登録者").apply {
         displaySlot = DisplaySlot.BELOW_NAME
     }

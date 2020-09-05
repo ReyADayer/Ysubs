@@ -3,6 +3,7 @@ package neo.atlantis.ysubs.config
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
 class PluginPreference(private val plugin: JavaPlugin, private val config: FileConfiguration) {
     private object Keys {
@@ -20,6 +21,10 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
 
     fun getPlayerChannelId(player: Player): String? {
         return config.getString(getPlayerChannelIdKey(player))
+    }
+
+    fun getPlayerChannelId(uuid: UUID): String? {
+        return config.getString(getPlayerChannelIdKey(uuid))
     }
 
     fun setPlayerChannelId(player: Player, channelId: String) {
@@ -58,6 +63,8 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
         set(value) = set(Keys.API_KEY, value)
 
     private fun getPlayerChannelIdKey(player: Player): String = "${Keys.CHANNELS}.${player.uniqueId}"
+
+    private fun getPlayerChannelIdKey(uuid: UUID): String = "${Keys.CHANNELS}.${uuid}"
 
     private fun getChannelSubscriberCountKey(channelId: String): String = "${Keys.CHANNEL_DATA}.${channelId}.${Keys.SUBSCRIBER_COUNT}"
 

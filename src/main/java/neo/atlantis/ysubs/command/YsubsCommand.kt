@@ -2,6 +2,7 @@ package neo.atlantis.ysubs.command
 
 import neo.atlantis.ysubs.api.YoutubeClient
 import neo.atlantis.ysubs.config.PluginPreference
+import neo.atlantis.ysubs.runnable.UpdateByChannelIdRunnable
 import neo.atlantis.ysubs.runnable.UpdateRunnable
 import org.bukkit.Server
 import org.bukkit.command.Command
@@ -9,6 +10,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.inject
+import java.util.*
 
 class YsubsCommand : BaseCommand() {
     private val plugin: JavaPlugin by inject()
@@ -34,6 +36,17 @@ class YsubsCommand : BaseCommand() {
                     val selectedPlayer = server.getPlayer(selectedPlayerName) ?: return false
                     UpdateRunnable(listOf(selectedPlayer)).runTaskLaterAsynchronously(plugin, 1)
                 }
+                true
+            }
+            "reloadbyuuid" -> {
+                val uuid = args[1] ?: return false
+                val id = pluginPreference.getPlayerChannelId(UUID.fromString(uuid)) ?: return false
+                UpdateByChannelIdRunnable(id).runTaskLaterAsynchronously(plugin, 1)
+                true
+            }
+            "reloadbychannelid" -> {
+                val id =  args[1] ?: return false
+                UpdateByChannelIdRunnable(id).runTaskLaterAsynchronously(plugin, 1)
                 true
             }
             "key" -> {
