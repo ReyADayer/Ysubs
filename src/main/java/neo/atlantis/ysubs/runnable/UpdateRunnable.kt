@@ -17,6 +17,21 @@ class UpdateRunnable(
         val ids: List<String> = players.mapNotNull {
             pluginPreference.getPlayerChannelId(it)
         }
-        youtubeClient.getChannels(ids)
+
+        val idsList: MutableList<List<String>> = mutableListOf()
+        var list: MutableList<String> = mutableListOf()
+        var count = 0
+        ids.forEach { id ->
+            list.add(id)
+            count += 1
+            if (count == 20) {
+                count = 0
+                idsList.add(list)
+                list = mutableListOf()
+            }
+        }
+        idsList.forEach {
+            youtubeClient.getChannels(it)
+        }
     }
 }
