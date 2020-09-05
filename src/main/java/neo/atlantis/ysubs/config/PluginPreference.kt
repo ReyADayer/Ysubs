@@ -58,6 +58,17 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
         set(getChannelPlayerNameKey(channelId), name)
     }
 
+    fun getChannelIds(): List<String> {
+        val configs = config.getConfigurationSection(Keys.CHANNELS)?.getKeys(false) ?: return listOf()
+        val result = mutableListOf<String>()
+        configs.forEach {
+            config.getString("${Keys.CHANNELS}.${it}")?.let { channelId ->
+                result.add(channelId)
+            }
+        }
+        return result
+    }
+
     var apiKey: String
         get() = config.getString(Keys.API_KEY) ?: ""
         set(value) = set(Keys.API_KEY, value)

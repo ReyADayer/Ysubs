@@ -9,6 +9,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitRunnable
 import org.koin.core.inject
 import java.util.*
 
@@ -45,8 +46,17 @@ class YsubsCommand : BaseCommand() {
                 true
             }
             "reloadbychannelid" -> {
-                val id =  args[1] ?: return false
+                val id = args[1] ?: return false
                 UpdateByChannelIdRunnable(id).runTaskLaterAsynchronously(plugin, 1)
+                true
+            }
+            "reloadall" -> {
+                val ids = pluginPreference.getChannelIds()
+                object : BukkitRunnable() {
+                    override fun run() {
+                        youtubeClient.getChannels(ids)
+                    }
+                }.runTaskLaterAsynchronously(plugin, 1)
                 true
             }
             "key" -> {
