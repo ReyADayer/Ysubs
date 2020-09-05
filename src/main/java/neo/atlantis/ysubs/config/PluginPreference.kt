@@ -46,7 +46,12 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
     }
 
     fun setChannelName(channelId: String, name: String) {
-        set(getChannelNameKey(channelId), name)
+        val channelName = if (name.isEmpty()) {
+            "チャンネル名なし"
+        } else {
+            name
+        }
+        set(getChannelNameKey(channelId), channelName)
     }
 
     fun getChannelPlayerNameCount(channelId: String?): String {
