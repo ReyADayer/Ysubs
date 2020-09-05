@@ -21,17 +21,21 @@ class UpdateRunnable(
         val idsList: MutableList<List<String>> = mutableListOf()
         var list: MutableList<String> = mutableListOf()
         var count = 0
-        ids.forEach { id ->
-            list.add(id)
-            count += 1
-            if (count == 20) {
-                count = 0
-                idsList.add(list)
-                list = mutableListOf()
+        if (ids.size <= 20) {
+            youtubeClient.getChannels(ids)
+        } else {
+            ids.forEach { id ->
+                list.add(id)
+                count += 1
+                if (count == 20) {
+                    count = 0
+                    idsList.add(list)
+                    list = mutableListOf()
+                }
             }
-        }
-        idsList.forEach {
-            youtubeClient.getChannels(it)
+            idsList.forEach {
+                youtubeClient.getChannels(it)
+            }
         }
     }
 }
