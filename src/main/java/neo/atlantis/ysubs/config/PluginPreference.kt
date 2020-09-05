@@ -8,6 +8,8 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
     private object Keys {
         const val CHANNELS = "channels"
         const val CHANNEL_DATA = "channel_data"
+        const val CHANNEL_NAME = "channel_name"
+        const val USER_NAME = "user_name"
         const val SUBSCRIBER_COUNT = "subscriberCount"
         const val API_KEY = "api_key"
     }

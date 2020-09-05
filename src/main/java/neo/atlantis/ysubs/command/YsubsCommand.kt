@@ -26,8 +26,14 @@ class YsubsCommand : BaseCommand() {
                 true
             }
             "reload" -> {
-                val players = server.onlinePlayers.toList()
-                UpdateRunnable(players).runTaskLaterAsynchronously(plugin, 1)
+                val selectedPlayerName = args[1]
+                if (selectedPlayerName == null) {
+                    val players = server.onlinePlayers.toList()
+                    UpdateRunnable(players).runTaskLaterAsynchronously(plugin, 1)
+                } else {
+                    val selectedPlayer = server.getPlayer(selectedPlayerName) ?: return false
+                    UpdateRunnable(listOf(selectedPlayer)).runTaskLaterAsynchronously(plugin, 1)
+                }
                 true
             }
             "key" -> {
