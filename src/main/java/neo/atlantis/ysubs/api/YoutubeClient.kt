@@ -36,6 +36,7 @@ class YoutubeClient(
             response.items.forEach {
                 val channelId = it.id
                 pluginPreference.setChannelSubscriberCount(channelId, it.statistics.subscriberCount)
+                pluginPreference.setChannelName(channelId, it.snippet.title)
             }
         }
     }

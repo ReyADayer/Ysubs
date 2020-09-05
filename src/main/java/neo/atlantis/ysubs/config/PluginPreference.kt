@@ -9,7 +9,7 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
         const val CHANNELS = "channels"
         const val CHANNEL_DATA = "channel_data"
         const val CHANNEL_NAME = "channel_name"
-        const val USER_NAME = "user_name"
+        const val PLAYER_NAME = "player_name"
         const val SUBSCRIBER_COUNT = "subscriberCount"
         const val API_KEY = "api_key"
     }
@@ -35,6 +35,24 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
         set(getChannelSubscriberCountKey(channelId), count)
     }
 
+    fun getChannelNameCount(channelId: String?): String {
+        channelId ?: return ""
+        return config.getString(getChannelNameKey(channelId)) ?: ""
+    }
+
+    fun setChannelName(channelId: String, name: String) {
+        set(getChannelNameKey(channelId), name)
+    }
+
+    fun getChannelPlayerNameCount(channelId: String?): String {
+        channelId ?: return ""
+        return config.getString(getChannelPlayerNameKey(channelId)) ?: ""
+    }
+
+    fun setChannelPlayerName(channelId: String, name: String) {
+        set(getChannelPlayerNameKey(channelId), name)
+    }
+
     var apiKey: String
         get() = config.getString(Keys.API_KEY) ?: ""
         set(value) = set(Keys.API_KEY, value)
@@ -42,6 +60,10 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
     private fun getPlayerChannelIdKey(player: Player): String = "${Keys.CHANNELS}.${player.uniqueId}"
 
     private fun getChannelSubscriberCountKey(channelId: String): String = "${Keys.CHANNEL_DATA}.${channelId}.${Keys.SUBSCRIBER_COUNT}"
+
+    private fun getChannelNameKey(channelId: String): String = "${Keys.CHANNEL_DATA}.${channelId}.${Keys.CHANNEL_NAME}"
+
+    private fun getChannelPlayerNameKey(channelId: String): String = "${Keys.CHANNEL_DATA}.${channelId}.${Keys.PLAYER_NAME}"
 
     private fun set(key: String, value: Any?) {
         config.set(key, value)
