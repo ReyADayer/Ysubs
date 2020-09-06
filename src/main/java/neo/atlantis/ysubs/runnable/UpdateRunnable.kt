@@ -17,8 +17,6 @@ class UpdateRunnable(
         val ids: List<String> = players.mapNotNull {
             pluginPreference.getPlayerChannelId(it)
         }
-        ids.chunked(20).forEach {
-            youtubeClient.getChannels(it)
-        }
+        youtubeClient.getChannels(ids)
     }
 }

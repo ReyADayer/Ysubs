@@ -20,6 +20,14 @@ class YsubsCommand : BaseCommand() {
     private val youtubeClient: YoutubeClient by inject()
 
     override fun onCommandByPlayer(player: Player, command: Command, label: String, args: CommandArgs): Boolean {
+        return onCommand(args)
+    }
+
+    override fun onCommandByOther(sender: CommandSender, command: Command, label: String, args: CommandArgs): Boolean {
+        return onCommand(args)
+    }
+
+    private fun onCommand(args: CommandArgs): Boolean {
         return when (args[0]) {
             "set" -> {
                 val selectedPlayerName = args[1] ?: return false
@@ -54,9 +62,7 @@ class YsubsCommand : BaseCommand() {
                 val ids = pluginPreference.getChannelIds()
                 object : BukkitRunnable() {
                     override fun run() {
-                        ids.chunked(20).forEach {
-                            youtubeClient.getChannels(it)
-                        }
+                        youtubeClient.getChannels(ids)
                     }
                 }.runTaskLaterAsynchronously(plugin, 1)
                 true
@@ -68,10 +74,5 @@ class YsubsCommand : BaseCommand() {
             }
             else -> false
         }
-    }
-
-    override fun onCommandByOther(sender: CommandSender, command: Command, label: String, args: CommandArgs): Boolean {
-        sender.sendMessage("You must be a player!")
-        return false
     }
 }

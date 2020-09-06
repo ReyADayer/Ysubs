@@ -36,7 +36,7 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
         return config.getInt(getChannelSubscriberCountKey(channelId), 0)
     }
 
-    fun setChannelSubscriberCount(channelId: String, count: Int) {
+    fun setChannelSubscriberCount(channelId: String, count: Long) {
         set(getChannelSubscriberCountKey(channelId), count)
     }
 

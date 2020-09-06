@@ -4,9 +4,11 @@ import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import neo.atlantis.ysubs.api.response.ChannelsResponse
 import neo.atlantis.ysubs.config.PluginPreference
 import okhttp3.OkHttpClient
 import org.bukkit.Server
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -28,17 +30,30 @@ class YoutubeClient(
 
     fun getChannels(channelIds: List<String>) {
         GlobalScope.launch {
-            val response = service.channels(
-                    "id,statistics,snippet",
-                    channelIds.joinToString(","),
-                    pluginPreference.apiKey
-            )
-            response.items.forEach {
-                val channelId = it.id
-                if (channelId.isNotEmpty()) {
-                    pluginPreference.setChannelSubscriberCount(channelId, it.statistics.subscriberCount)
-                    pluginPreference.setChannelName(channelId, it.snippet.title)
+            try {
+                val responses: MutableList<ChannelsResponse> = mutableListOf()
+                channelIds.chunked(20).forEach {
+                    val response = service.channels(
+                            "id,statistics,snippet",
+                            it.joinToString(","),
+                            pluginPreference.apiKey
+                    )
+                    responses.add(response)
                 }
+                responses.forEach { response ->
+                    response.items.forEach {
+                        val channelId = it.id
+                        if (channelId.isNotEmpty()) {
+                            pluginPreference.setChannelSubscriberCount(channelId, it.statistics.subscriberCount)
+                            pluginPreference.setChannelName(channelId, it.snippet.title)
+                        }
+                    }
+                }
+                server.broadcast("Success", Server.BROADCAST_CHANNEL_ADMINISTRATIVE)
+            } catch (e: HttpException) {
+                server.broadcast("Failed ${e.code()} ${e.message()}", Server.BROADCAST_CHANNEL_ADMINISTRATIVE)
+            } catch (e: Exception) {
+                server.broadcast("Failed $e", Server.BROADCAST_CHANNEL_ADMINISTRATIVE)
             }
         }
     }

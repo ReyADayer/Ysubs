@@ -25,7 +25,7 @@ data class Snippet(
 )
 
 data class Statistics(
-        val viewCount: Int,
-        val subscriberCount: Int,
-        val videoCount: Int
+        val viewCount: Long,
+        val subscriberCount: Long,
+        val videoCount: Long
 )
