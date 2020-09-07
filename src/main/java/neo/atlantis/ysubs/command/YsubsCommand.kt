@@ -2,6 +2,7 @@ package neo.atlantis.ysubs.command
 
 import neo.atlantis.ysubs.api.YoutubeClient
 import neo.atlantis.ysubs.config.PluginPreference
+import neo.atlantis.ysubs.runnable.CsvRunnable
 import neo.atlantis.ysubs.runnable.UpdateByChannelIdRunnable
 import neo.atlantis.ysubs.runnable.UpdateRunnable
 import org.bukkit.Server
@@ -65,6 +66,11 @@ class YsubsCommand : BaseCommand() {
                         youtubeClient.getChannels(ids)
                     }
                 }.runTaskLaterAsynchronously(plugin, 1)
+                true
+            }
+            "loadcsv" -> {
+                val fileName = args[1] ?: return false
+                CsvRunnable(fileName).runTaskLaterAsynchronously(plugin, 1)
                 true
             }
             "key" -> {

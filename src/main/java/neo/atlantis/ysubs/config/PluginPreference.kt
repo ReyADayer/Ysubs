@@ -31,6 +31,10 @@ class PluginPreference(private val plugin: JavaPlugin, private val config: FileC
         set(getPlayerChannelIdKey(player), channelId)
     }
 
+    fun setPlayerChannelId(playerUuid: UUID, channelId: String) {
+        set("${Keys.CHANNELS}.${playerUuid}", channelId)
+    }
+
     fun getChannelSubscriberCount(channelId: String?): Int {
         channelId ?: return 0
         return config.getInt(getChannelSubscriberCountKey(channelId), 0)
